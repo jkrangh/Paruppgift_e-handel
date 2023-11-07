@@ -9,17 +9,20 @@ namespace Paruppgift_e_handel
 {
     internal class CustomerOrder
     {
-        [Key]
+        
         public int CustomerOrderId { get; set; }
         public List<OrderItems> OrderItems { get; set; }
 
-        public CustomerOrder(List<OrderItems> orderItems)
+        //TODO: bool IsDelivered: if true, user can't edit or delete order 
+
+        //public CustomerOrder(List<OrderItems> orderItems)
+        //{
+        //    OrderItems = orderItems;
+        //}
+
+        public override string? ToString()
         {
-            this.OrderItems = orderItems;
-        }
-        public CustomerOrder()
-        {
-            
+            return $"Customer Order ID: {CustomerOrderId}";
         }
     }
 }

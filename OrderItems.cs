@@ -13,13 +13,16 @@ namespace Paruppgift_e_handel
         public int Amount { get; set; }
 
 
-        public OrderItems(Product product, int amount)
+        //public OrderItems(Product product, int amount)
+        //{
+        //    Product = product;
+        //    Amount = amount;
+        //}
+
+        public override string? ToString()
         {
-            Product = product;
-            Amount = amount;
+            return $"Product: {Product} Amount: {Amount}";
         }
-
-
 
 
     }
