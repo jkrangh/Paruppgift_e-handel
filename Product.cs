@@ -20,7 +20,7 @@ namespace Paruppgift_e_handel
 
         public override string? ToString()
         {
-            return $"[{ProductId}] {ProductDescription}, {ProductPrice}:-";
+            return $"{ProductDescription}, {ProductPrice}:-";
         }
 
         //public string ProductAmountPerPack { get; set; }

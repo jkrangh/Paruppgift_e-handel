@@ -21,7 +21,7 @@ namespace Paruppgift_e_handel
 
         public override string? ToString()
         {
-            return $"Product: {Product} Amount: {Amount}";
+            return $"{Amount}x {Product}";
         }
 
 

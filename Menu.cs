@@ -13,6 +13,7 @@ namespace Paruppgift_e_handel
         private Store store;
         private string[] loginOptions;
         private string[] menuOptions;
+        
         public Menu(Store store, string[] loginOptions, string[] menuOptions)
         {
             this.store = store;
@@ -25,34 +26,35 @@ namespace Paruppgift_e_handel
             {
                 Array.ForEach(loginOptions, Console.WriteLine);
 
-                store.LoginHandler(GetIntFromUser("Choose menu option:", 0, loginOptions.Length));
+                store.LoginHandler(UserIntQuery("Choose menu option:", 0, loginOptions.Length));
             }
         }
         public void DisplayMainMenu(Customer customer)
         {
-            while (true)
+            bool run = true;
+            while (run)
             {
                 Console.WriteLine($"Logged in as customer: {customer.FirstName} {customer.LastName}\n");
 
                 Array.ForEach(menuOptions, Console.WriteLine);
 
-                store.MenuHandler(customer, GetIntFromUser("Choose menu option:", 0, menuOptions.Length));
+                run = store.MenuHandler(customer, UserIntQuery("Choose menu option:", 0, menuOptions.Length));
             }
         }
 
-        internal string[] CustomerLoginQuery()
+        internal string[] UserLoginQuery()
         {
-            string[] customerCredentials = new string[2];
+            string[] loginCredentials = new string[2];
 
             //Email
             Console.Write("E-mail:");
-            customerCredentials[0] = Console.ReadLine().ToLower();
+            loginCredentials[0] = Console.ReadLine().ToLower();
 
             //Password
             Console.Write("Password:");
-            customerCredentials[1] = Console.ReadLine();
+            loginCredentials[1] = Console.ReadLine();
 
-            return customerCredentials;
+            return loginCredentials;
         }
 
         public void DisplayOrderMenu()
@@ -65,17 +67,27 @@ namespace Paruppgift_e_handel
 
         }
 
-        public void ListProducts()
+        public void PrintList(List<Product> list)
         {
-
+            for (int i = 0; i < list.Count; i++)
+            {
+                Console.WriteLine($"[{i+1}] {list[i].ToString()}"); 
+            }
         }
-
+        public void PrintList(List<OrderItems> list)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                Console.WriteLine($"{list[i].ToString()}");
+            }
+        }
+        
         public void ListOrders()
         {
 
         }
 
-        public int GetIntFromUser(string question, int minValue, int maxValue)
+        public int UserIntQuery(string question, int minValue, int maxValue)
         {
             int value = 0;
             bool validInput = false;
@@ -104,5 +116,7 @@ namespace Paruppgift_e_handel
         {
             Console.WriteLine("Wrong user credentials entered.");
         }
+
+        
     }
 }

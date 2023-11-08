@@ -19,10 +19,11 @@ namespace Paruppgift_e_handel
 
             //var customerOrder = new CustomerOrder() { OrderItems = shoppingBasket };
 
-            
 
-            
-            //foreach (var cust in store.Customers.Include(x => x.CustomerOrders).ThenInclude(x => x.OrderItems))
+
+
+
+            //foreach (var cust in db.Customers.Include(x => x.CustomerOrders).ThenInclude(x => x.OrderItems))
             //{
             //    Console.WriteLine(cust);
 
@@ -37,19 +38,21 @@ namespace Paruppgift_e_handel
             //    }
             //}
 
-               
+
+
+
         }
     }
 }
-            /*Tillsammans ska ni skapa en databas med hjälp av EF code first, som ska hjälpa en e-handel.
+/*Tillsammans ska ni skapa en databas med hjälp av EF code first, som ska hjälpa en e-handel.
 
-            Ni behöver skapa klasser för:
-            Kunder
-            Order
-            OrderItems
-            Produkter
-            Tabellerna ska vara kopplade i den ordningen som de står ovan.
-            Tänk på att det kan vara 1 till många relationer.
-            
-            Varning Order är ju samma ord som finns i t.ex.Linq för att sortera. 
-            Ett tipps för den som inte vill ha problem är att kalla klassen något annat än order.*/
+Ni behöver skapa klasser för:
+Kunder
+Order
+OrderItems
+Produkter
+Tabellerna ska vara kopplade i den ordningen som de står ovan.
+Tänk på att det kan vara 1 till många relationer.
+
+Varning Order är ju samma ord som finns i t.ex.Linq för att sortera. 
+Ett tipps för den som inte vill ha problem är att kalla klassen något annat än order.*/

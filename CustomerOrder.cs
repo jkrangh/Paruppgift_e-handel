@@ -14,6 +14,16 @@ namespace Paruppgift_e_handel
         public int CustomerId { get; set; }
         public List<OrderItems> OrderItems { get; set; }
 
+        public CustomerOrder()
+        {
+            
+        }
+        public CustomerOrder(int customerId, List<OrderItems> orderItems)
+        {
+            CustomerId = customerId;
+            OrderItems = orderItems;
+        }
+
         //TODO: bool IsDelivered: if true, user can't edit or delete order 
 
 

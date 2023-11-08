@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Paruppgift_e_handel
 
         //Menu options:
         private readonly string[] loginOptions = { "1. Customer login", "2. Create new customer", "3. Exit" };
-        private readonly string[] menuOptions = { "1. Create order", "2. List available products", "3. List all orders", "4. Edit order",
+        private readonly string[] menuOptions = { "1. List available products", "2. Create order", "3. List all orders", "4. Edit order",
                                                   "5. Delete order", "6. Edit customer details", "7. Customer logout" };
         public Store()
         {
@@ -29,7 +30,7 @@ namespace Paruppgift_e_handel
             switch (input)
             {
                 case 1:
-                    var customer = Login(menu.CustomerLoginQuery());
+                    var customer = Login(menu.UserLoginQuery());
                     if (customer != null)
                     {
                         menu.DisplayMainMenu(customer);
@@ -46,31 +47,114 @@ namespace Paruppgift_e_handel
             }
         }
 
-        internal void MenuHandler(Customer customer, int input)
+        internal bool MenuHandler(Customer customer, int input)
         {
+            bool run = true;
             switch (input)
             {
                 case 1:
-                    //CreateOrder
+                    //List available products
+                    menu.PrintList(ListAllProducts());
                     break;
                 case 2:
+                    //CreateOrder
+                    var inventory = ListAllProducts();
+                    menu.PrintList(inventory);
+                    CreateOrder(AddProductToBasket(inventory), customer);
                     break;
                 case 3:
+                    //List all orders
+                    //var receipt = storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Include(x => x.;
+                    var list = storeDb.CustomerOrders.Include(x => x.OrderItems);
+                    list.Where(x => x.CustomerId == customer.CustomerId);
+                    foreach (var custOrder in list)
+                    {
+                        Console.WriteLine(custOrder.OrderItems.ToString());
+                    }
+
+                    //foreach (var custOrder in storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId))
+                    //{
+                    //    Console.WriteLine(custOrder);
+                    //}
+
+                    //foreach (var cust in storeDb.CustomerOrders.
+                    //{
+                    //    Console.WriteLine(cust);
+
+                    //    foreach (var custorder in cust.CustomerOrders)
+                    //    {
+                    //        Console.WriteLine(custorder);
+
+                    //        foreach (var order in custorder.OrderItems)
+                    //        {
+                    //            Console.WriteLine(order);
+                    //        }
+                    //    }
+                    //}
+
                     break;
                 case 4:
+                    //Edit order ?
                     break;
                 case 5:
+                    //Delete order
+
+                    //Identify CustOrder to delete.
+
+
+                    //storeDb.Customer
                     break;
                 case 6:
+                    //Edit customer details
                     break;
                 case 7:
-                    menu.DisplayLoginMenu();
+                    //Return to loginMenu.
+                    run = false;
                     break;
                 default:
                     break;
             }
-
+            return run;
         }
+
+        private List<OrderItems> AddProductToBasket(List<Product> inventory)
+        {
+            var customerOrderItems = new List<OrderItems>();
+            bool run = true;
+
+            while (run)
+            {
+
+                OrderItems orderItems = new()
+                {
+                    Product = inventory[menu.UserIntQuery("Choose product:", 0, inventory.Count()) - 1],
+                    //Product = inventory.First(p => p.ProductId == menu.UserIntQuery("Choose product: ", 0, inventory.Count())),
+                    Amount = menu.UserIntQuery("Choose amount: ", 0, int.MaxValue)
+                };
+
+                customerOrderItems.Insert(0, orderItems);
+                menu.PrintList(customerOrderItems);
+                run = Convert.ToBoolean(menu.UserIntQuery("Continue shopping (1 = yes, 0 = no)", 0, 1)); // TODO - Fixa så att vi slipper frågan (0 = exit)
+                                                                                                         //Place order / Cancel order
+
+            }
+            return customerOrderItems;
+        }
+        private void CreateOrder(List<OrderItems> shoppingBasket, Customer customer)
+        {
+            var customerOrder = new CustomerOrder(customer.CustomerId, shoppingBasket);
+            storeDb.CustomerOrders.Add(customerOrder);
+            storeDb.SaveChanges();
+
+            
+        }
+
+
+        private List<Product> ListAllProducts()
+        {
+            return storeDb.Products.ToList();
+        }
+
         public Customer Login(string[] customerCredentials)
         {
 
