@@ -3,30 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Paruppgift_e_handel
 {
     internal class Menu
     {
-        //View
         private Store store;
-        
-        public Menu(Store store)
+        private string[] loginOptions;
+        private string[] menuOptions;
+        public Menu(Store store, string[] loginOptions, string[] menuOptions)
         {
             this.store = store;
+            this.loginOptions = loginOptions;
+            this.menuOptions = menuOptions;
         }
         public void DisplayLoginMenu()
         {
-            Console.WriteLine(store.GetLoginOptions());
+            Array.ForEach(loginOptions, Console.WriteLine);
 
-            store.LoginHandler(GetIntFromUser("Choose menu option", 0, store.GetLoginOptions().Length));
+            store.LoginHandler(GetIntFromUser("Choose menu option:", 0, loginOptions.Length));
         }
         public void DisplayMainMenu()
         {
-            Console.WriteLine(store.GetMenuOptions());
-            
-            store.MenuHandler(GetIntFromUser("Choose menu option", 0, store.GetMenuOptions().Length));
+            //Visa inloggad kund på något sätt?
+
+            Array.ForEach(menuOptions, Console.WriteLine);
+
+            store.MenuHandler(GetIntFromUser("Choose menu option:", 0, menuOptions.Length));
         }
 
         public void DisplayOrderMenu()
@@ -35,15 +40,15 @@ namespace Paruppgift_e_handel
         }
 
         public void ListCustomers()
-        { 
-        
+        {
+
         }
-        
+
         public void ListProducts()
         {
 
         }
-        
+
         public void ListOrders()
         {
 
@@ -68,4 +73,5 @@ namespace Paruppgift_e_handel
 
             return value;
         }
+    }
 }
