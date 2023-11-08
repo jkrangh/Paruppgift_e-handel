@@ -8,9 +8,7 @@ namespace Paruppgift_e_handel
     {
         static void Main(string[] args)
         {
-            var store = new Store();
-
-            store.menu
+            new Store().Run();
             
             //var customer = store.Customers.FirstOrDefault(c => c.CustomerName == "Janne");
 
