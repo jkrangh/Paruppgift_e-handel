@@ -82,9 +82,23 @@ namespace Paruppgift_e_handel
             }
         }
         
-        public void ListOrders()
+        public string[] GetCustomerDetails()
         {
-
+            string[] newCustomerDetails = new string[6];
+            Console.Write("Enter first name: ");
+            newCustomerDetails[0] = Console.ReadLine();
+            Console.Write("Enter last name: ");
+            newCustomerDetails[1] = Console.ReadLine();
+            Console.Write("Enter address: ");
+            newCustomerDetails[2] = Console.ReadLine();
+            Console.Write("Enter phone nr.: ");
+            newCustomerDetails[3] = Console.ReadLine();
+            Console.Write("Enter email: ");
+            newCustomerDetails[4] = Console.ReadLine();
+            Console.Write("Enter password: ");
+            newCustomerDetails[5] = Console.ReadLine();
+            
+            return newCustomerDetails;
         }
 
         public int UserIntQuery(string question, int minValue, int maxValue)

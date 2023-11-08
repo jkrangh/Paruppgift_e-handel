@@ -37,7 +37,7 @@ namespace Paruppgift_e_handel
                     }
                     break;
                 case 2:
-                    //MenuHandler(CreateCustomer(), GetIntFromUser)
+                    menu.DisplayMainMenu(CreateCustomer(menu.GetCustomerDetails()));
                     break;
                 case 3:
                     Environment.Exit(0);
@@ -66,8 +66,8 @@ namespace Paruppgift_e_handel
                     //List all orders
                     //var receipt = storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Include(x => x.;
                     var list = storeDb.CustomerOrders.Include(x => x.OrderItems);
-                    list.Where(x => x.CustomerId == customer.CustomerId);
-                    foreach (var custOrder in list)
+                    var listSortedByCustomer = list.Where(x => x.CustomerId == customer.CustomerId);
+                    foreach (var custOrder in listSortedByCustomer)
                     {
                         Console.WriteLine(custOrder.OrderItems.ToString());
                     }
@@ -140,13 +140,26 @@ namespace Paruppgift_e_handel
             }
             return customerOrderItems;
         }
+        private Customer CreateCustomer(string[] customerDetails)
+        {            
+            var customer = new Customer()
+            {
+                FirstName = customerDetails[0],
+                LastName = customerDetails[1],
+                Address = customerDetails[2],
+                Phone = customerDetails[3],
+                Email = customerDetails[4],
+                Password = customerDetails[5],
+            };
+            storeDb.Customers.Add(customer);
+            storeDb.SaveChanges();
+            return customer;
+        }
         private void CreateOrder(List<OrderItems> shoppingBasket, Customer customer)
         {
             var customerOrder = new CustomerOrder(customer.CustomerId, shoppingBasket);
             storeDb.CustomerOrders.Add(customerOrder);
-            storeDb.SaveChanges();
-
-            
+            storeDb.SaveChanges();            
         }
 
 
