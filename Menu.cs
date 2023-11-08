@@ -25,13 +25,28 @@ namespace Paruppgift_e_handel
 
             store.LoginHandler(GetIntFromUser("Choose menu option:", 0, loginOptions.Length));
         }
-        public void DisplayMainMenu()
+        public void DisplayMainMenu(Customer customer)
         {
-            //Visa inloggad kund på något sätt?
+            Console.WriteLine($"Logged in as customer: {customer.FirstName} {customer.LastName}\n");
 
             Array.ForEach(menuOptions, Console.WriteLine);
 
-            store.MenuHandler(GetIntFromUser("Choose menu option:", 0, menuOptions.Length));
+            store.MenuHandler(customer, GetIntFromUser("Choose menu option:", 0, menuOptions.Length));
+        }
+
+        internal string[] CustomerLoginQuery()
+        {
+            string[] customerCredentials = new string[2];
+
+            //Email
+            Console.Write("E-mail:");
+            customerCredentials[0] = Console.ReadLine().ToLower();
+
+            //Password
+            Console.Write("Password:");
+            customerCredentials[1] = Console.ReadLine();
+
+            return customerCredentials;
         }
 
         public void DisplayOrderMenu()
@@ -72,6 +87,16 @@ namespace Paruppgift_e_handel
             }
 
             return value;
+        }
+
+        public void PrintHeader()
+        {
+            Console.WriteLine("==== E-Handel ====");
+        }
+
+        public void PrintLoginFail() 
+        {
+            Console.WriteLine("Wrong user credentials entered.");
         }
     }
 }

@@ -31,10 +31,15 @@ namespace Paruppgift_e_handel
                 switch (input)
                 {
                     case 1:
-                        //Login
-                        //Menuhandler()
+                        var customer = Login(menu.CustomerLoginQuery());
+                        if(customer == null)
+                        {
+                            break;
+                        }
+                        menu.DisplayMainMenu(customer);
                         break;
                     case 2:
+                        //MenuHandler(CreateCustomer(), GetIntFromUser)
                         break;
                     case 3:
                         return;
@@ -44,13 +49,15 @@ namespace Paruppgift_e_handel
             }
         }
 
-        internal void MenuHandler(int input)
+        internal void MenuHandler(Customer customer, int input)
         {
+
             while (true)
             {
                 switch (input)
                 {
                     case 1:
+                        //CreateOrder
                         break;
                     case 2:
                         break;
@@ -63,11 +70,32 @@ namespace Paruppgift_e_handel
                     case 6:
                         break;
                     case 7:
-                        return;
+                        menu.DisplayLoginMenu();
+                        break;
                     default:
                         break;
                 }
             }
+        }
+        public Customer Login(string[] customerCredentials)
+        {
+            while (true)
+            {
+                var customer = storeDb.Customers.FirstOrDefault(c => c.Email == customerCredentials[0] && c.Password == customerCredentials[1]);
+
+                if (customer == default)
+                {
+                    menu.PrintLoginFail();
+                    //customerCredentials = menu.CustomerLoginQuery();
+                }
+                else if (customer != default)
+                {
+                    return customer;
+
+                }
+ 
+            }
+            return null;
         }
     }
 }
