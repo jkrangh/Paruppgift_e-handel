@@ -11,14 +11,11 @@ namespace Paruppgift_e_handel
     {
         
         public int CustomerOrderId { get; set; }
+        public int CustomerId { get; set; }         //Blev skapad som "shadow property" i CustomerOrder tabe. Explicit deklarerad för tydlighet.
         public List<OrderItems> OrderItems { get; set; }
 
         //TODO: bool IsDelivered: if true, user can't edit or delete order 
 
-        //public CustomerOrder(List<OrderItems> orderItems)
-        //{
-        //    OrderItems = orderItems;
-        //}
 
         public override string? ToString()
         {
