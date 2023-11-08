@@ -21,17 +21,23 @@ namespace Paruppgift_e_handel
         }
         public void DisplayLoginMenu()
         {
-            Array.ForEach(loginOptions, Console.WriteLine);
+            while (true)
+            {
+                Array.ForEach(loginOptions, Console.WriteLine);
 
-            store.LoginHandler(GetIntFromUser("Choose menu option:", 0, loginOptions.Length));
+                store.LoginHandler(GetIntFromUser("Choose menu option:", 0, loginOptions.Length));
+            }
         }
         public void DisplayMainMenu(Customer customer)
         {
-            Console.WriteLine($"Logged in as customer: {customer.FirstName} {customer.LastName}\n");
+            while (true)
+            {
+                Console.WriteLine($"Logged in as customer: {customer.FirstName} {customer.LastName}\n");
 
-            Array.ForEach(menuOptions, Console.WriteLine);
+                Array.ForEach(menuOptions, Console.WriteLine);
 
-            store.MenuHandler(customer, GetIntFromUser("Choose menu option:", 0, menuOptions.Length));
+                store.MenuHandler(customer, GetIntFromUser("Choose menu option:", 0, menuOptions.Length));
+            }
         }
 
         internal string[] CustomerLoginQuery()
@@ -94,7 +100,7 @@ namespace Paruppgift_e_handel
             Console.WriteLine("==== E-Handel ====");
         }
 
-        public void PrintLoginFail() 
+        public void PrintLoginFail()
         {
             Console.WriteLine("Wrong user credentials entered.");
         }

@@ -26,75 +26,68 @@ namespace Paruppgift_e_handel
         }
         internal void LoginHandler(int input)
         {
-            while (true)
+            switch (input)
             {
-                switch (input)
-                {
-                    case 1:
-                        var customer = Login(menu.CustomerLoginQuery());
-                        if(customer == null)
-                        {
-                            break;
-                        }
+                case 1:
+                    var customer = Login(menu.CustomerLoginQuery());
+                    if (customer != null)
+                    {
                         menu.DisplayMainMenu(customer);
-                        break;
-                    case 2:
-                        //MenuHandler(CreateCustomer(), GetIntFromUser)
-                        break;
-                    case 3:
-                        return;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case 2:
+                    //MenuHandler(CreateCustomer(), GetIntFromUser)
+                    break;
+                case 3:
+                    Environment.Exit(0);
+                    return;
+                default:
+                    break;
             }
         }
 
         internal void MenuHandler(Customer customer, int input)
         {
-
-            while (true)
+            switch (input)
             {
-                switch (input)
-                {
-                    case 1:
-                        //CreateOrder
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    case 6:
-                        break;
-                    case 7:
-                        menu.DisplayLoginMenu();
-                        break;
-                    default:
-                        break;
-                }
+                case 1:
+                    //CreateOrder
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    menu.DisplayLoginMenu();
+                    break;
+                default:
+                    break;
             }
+
         }
         public Customer Login(string[] customerCredentials)
         {
-            while (true)
+
+
+            var customer = storeDb.Customers.FirstOrDefault(c => c.Email == customerCredentials[0] && c.Password == customerCredentials[1]);
+
+            if (customer == default)
             {
-                var customer = storeDb.Customers.FirstOrDefault(c => c.Email == customerCredentials[0] && c.Password == customerCredentials[1]);
-
-                if (customer == default)
-                {
-                    menu.PrintLoginFail();
-                    //customerCredentials = menu.CustomerLoginQuery();
-                }
-                else if (customer != default)
-                {
-                    return customer;
-
-                }
- 
+                menu.PrintLoginFail();
+                //customerCredentials = menu.CustomerLoginQuery();
             }
+            else if (customer != default)
+            {
+                return customer;
+
+            }
+
             return null;
         }
     }
