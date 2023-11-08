@@ -8,29 +8,22 @@ namespace Paruppgift_e_handel
 {
     internal class Store
     {
-        private Menu menu;
-        //Controller
         StoreDbContext storeDb = new StoreDbContext();
+        private Menu menu;
 
         //Menu options:
-        private string[] loginOptions = { "1. Customer login", "2. Create new customer", "3. Exit" };
-        private string[] menuOptions = { "1. Create order", "2. List available products", "3. List all orders", "4. Edit order",
-                                        "5. Delete order", "6. Edit customer details", "7. Customer logout" };
-        public Store(Menu menu)
+        private readonly string[] loginOptions = { "1. Customer login", "2. Create new customer", "3. Exit" };
+        private readonly string[] menuOptions = { "1. Create order", "2. List available products", "3. List all orders", "4. Edit order",
+                                                  "5. Delete order", "6. Edit customer details", "7. Customer logout" };
+        public Store()
         {
-            this.menu = menu;
+            menu = new Menu(this, loginOptions, menuOptions);
         }
 
-        internal string[] GetLoginOptions()
+        internal void Run()
         {
-            return loginOptions;
+            menu.DisplayLoginMenu();
         }
-
-        internal string[] GetMenuOptions()
-        {
-            return menuOptions;
-        }
-
         internal void LoginHandler(int input)
         {
             while (true)
