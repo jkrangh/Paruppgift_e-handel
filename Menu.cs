@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Paruppgift_e_handel
         private Store store;
         private string[] loginOptions;
         private string[] menuOptions;
-        
+
         public Menu(Store store, string[] loginOptions, string[] menuOptions)
         {
             this.store = store;
@@ -67,21 +68,33 @@ namespace Paruppgift_e_handel
 
         }
 
-        public void PrintList(List<Product> list)
+        public void PrintList<T>(List<T> list, double price )
         {
-            for (int i = 0; i < list.Count; i++)
+            if (list.GetType() == typeof(List<Product>))
             {
-                Console.WriteLine($"[{i+1}] {list[i].ToString()}"); 
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Console.WriteLine($"[{i + 1}] {list[i]}");
+                }
+            }
+            if(list.GetType() == typeof(List<OrderItems>)) 
+            {
+                Console.WriteLine("Shopping basket (enter 0 to continue to check-out)");
+                for (int i = 0; i < list.Count; i++)
+                {
+                    Console.WriteLine($"{list[i]}");
+                }
+                Console.WriteLine($"Total cost: {price}SEK");
             }
         }
-        public void PrintList(List<OrderItems> list)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                Console.WriteLine($"{list[i].ToString()}");
-            }
-        }
-        
+        //public void PrintList(List<OrderItems> list)
+        //{
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        Console.WriteLine($"{list[i]}");
+        //    }
+        //}
+
         public string[] GetCustomerDetails()
         {
             string[] newCustomerDetails = new string[6];
@@ -97,7 +110,7 @@ namespace Paruppgift_e_handel
             newCustomerDetails[4] = Console.ReadLine();
             Console.Write("Enter password: ");
             newCustomerDetails[5] = Console.ReadLine();
-            
+
             return newCustomerDetails;
         }
 
@@ -131,6 +144,6 @@ namespace Paruppgift_e_handel
             Console.WriteLine("Wrong user credentials entered.");
         }
 
-        
+
     }
 }
