@@ -12,7 +12,7 @@ using Paruppgift_e_handel;
 namespace Paruppgift_e_handel.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20231109071619_initial")]
+    [Migration("20231109111823_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -142,11 +142,13 @@ namespace Paruppgift_e_handel.Migrations
 
             modelBuilder.Entity("Paruppgift_e_handel.CustomerOrder", b =>
                 {
-                    b.HasOne("Paruppgift_e_handel.Customer", null)
+                    b.HasOne("Paruppgift_e_handel.Customer", "Customer")
                         .WithMany("CustomerOrders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Paruppgift_e_handel.OrderItems", b =>

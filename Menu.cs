@@ -52,11 +52,11 @@ namespace Paruppgift_e_handel
             string[] loginCredentials = new string[2];
 
             //Email
-            Console.Write("E-mail:");
+            Console.Write("E-mail: ");
             loginCredentials[0] = Console.ReadLine().ToLower();
 
             //Password
-            Console.Write("Password:");
+            Console.Write("Password: ");
             loginCredentials[1] = Console.ReadLine();
 
             return loginCredentials;
@@ -140,7 +140,7 @@ namespace Paruppgift_e_handel
 
         public void PrintHeader()
         {
-            Console.WriteLine("==== E-Handel ====");
+            Console.WriteLine("==== Stekarjannes Fisk och Grönt ====");
             Console.WriteLine();
         }
 
@@ -152,6 +152,7 @@ namespace Paruppgift_e_handel
         public void EntryFail()
         {
             Console.WriteLine("Invalid entry.");
+            Console.ReadKey();
         }
 
     }

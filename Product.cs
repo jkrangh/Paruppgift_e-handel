@@ -20,8 +20,8 @@ namespace Paruppgift_e_handel
     internal class Product
     {
         public int ProductId { get; set; }
-        public string Description { get; set; }
-        public string Brand { get; set; }
+        public string Description { get; set; } = null!;
+        public string Brand { get; set; } = "";
         [Column(TypeName = "nvarchar(24)")]     //Force enum to string conversion.
         public Category Category { get; set; }
         public double Price { get; set; }

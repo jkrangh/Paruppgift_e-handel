@@ -84,17 +84,7 @@ namespace Paruppgift_e_handel
             }
             return run;
         }
-
-        //private void DeleteOrder(Customer customer)
-        //{
-        //    ListOrders(customer);
-
-        //    int ordersPlaced = storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Count();
-        //    Console.WriteLine(ordersPlaced);
-        //    int id = menu.UserIntQuery("Enter order ID to delete:", 0, ordersPlaced);
-
-        //}
-
+        
         private void EditCustomer(Customer customer)
         {
             var customerDetails = menu.GetCustomerDetails();
@@ -150,7 +140,7 @@ namespace Paruppgift_e_handel
         }
         private void CreateOrder(List<OrderItems> shoppingBasket, Customer customer)
         {
-            var customerOrder = new CustomerOrder(customer.CustomerId, shoppingBasket);
+            var customerOrder = new CustomerOrder(customer, shoppingBasket);
             storeDb.CustomerOrders.Add(customerOrder);
             storeDb.SaveChanges();
             Console.WriteLine($"{customerOrder} was placed successfully!");
@@ -165,7 +155,7 @@ namespace Paruppgift_e_handel
         internal void ListOrders(Customer customer)
         {
             Console.WriteLine($"All orders placed by {customer.FirstName} {customer.LastName}");
-            foreach (var customerOrder in storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Include(x => x.OrderItems).ThenInclude(x => x.Product))
+            foreach (var customerOrder in storeDb.CustomerOrders.Where(x => x.Customer.CustomerId == customer.CustomerId).Include(x => x.OrderItems).ThenInclude(x => x.Product))
             {
                 Console.WriteLine($"Order ID: {customerOrder.CustomerOrderId} Total cost: {customerOrder.OrderItems.Sum(x => x.TotalSum)}SEK");
 
@@ -179,7 +169,7 @@ namespace Paruppgift_e_handel
         {
             ListOrders(customer);
             int orderIdToDelete = menu.UserIntQuery("Choose order to delete: ", 0, int.MaxValue);
-            var order = storeDb.CustomerOrders.FirstOrDefault(x => x.CustomerOrderId == orderIdToDelete);
+            var order = storeDb.CustomerOrders.Where(x => x.Customer.CustomerId == customer.CustomerId).FirstOrDefault(x => x.CustomerOrderId == orderIdToDelete);
             if(order != default)
             {
                 storeDb.CustomerOrders.Remove(order);
