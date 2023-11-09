@@ -11,7 +11,18 @@ namespace Paruppgift_e_handel
         public int OrderItemsId { get; set; }
         public Product Product { get; set; }
         public int Amount { get; set; }
+        public double TotalSum { get; set; }
 
+        public OrderItems()
+        {
+            
+        }
+        public OrderItems(Product product, int amount)
+        {
+            Product = product;
+            Amount = amount;
+            TotalSum = Product.Price * Amount;
+        }
 
         //public OrderItems(Product product, int amount)
         //{
@@ -21,7 +32,7 @@ namespace Paruppgift_e_handel
 
         public override string? ToString()
         {
-            return $"{Amount}x {Product}";
+            return $"{Amount}x {Product.Description}";
         }
 
 
