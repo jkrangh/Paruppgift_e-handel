@@ -14,8 +14,8 @@ namespace Paruppgift_e_handel
 
         //Menu options:
         private readonly string[] loginOptions = { "1. Customer login", "2. Create new customer", "3. Exit" };
-        private readonly string[] menuOptions = { "1. List available products", "2. Create order", "3. List all orders", "4. Edit order",
-                                                  "5. Delete order", "6. Edit customer details", "7. Customer logout" };
+        private readonly string[] menuOptions = { "1. List available products", "2. Create order", "3. List all orders",
+                                                  "4. Delete order", "5. Edit customer details", "6. Customer logout" };
         public Store()
         {
             menu = new Menu(this, loginOptions, menuOptions);
@@ -54,60 +54,27 @@ namespace Paruppgift_e_handel
             {
                 case 1:
                     //List available products
-                    menu.PrintList(ListAllProducts());
+                    menu.PrintList(ListAllProducts(), 0);
                     break;
                 case 2:
                     //CreateOrder
                     var inventory = ListAllProducts();
-                    menu.PrintList(inventory);
+                    menu.PrintList(inventory, 0);
                     CreateOrder(AddProductToBasket(inventory), customer);
                     break;
                 case 3:
                     //List all orders
-                    //var receipt = storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Include(x => x.;
-                    var list = storeDb.CustomerOrders.Include(x => x.OrderItems);
-                    var listSortedByCustomer = list.Where(x => x.CustomerId == customer.CustomerId);
-                    foreach (var custOrder in listSortedByCustomer)
-                    {
-                        Console.WriteLine(custOrder.OrderItems.ToString());
-                    }
-
-                    //foreach (var custOrder in storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId))
-                    //{
-                    //    Console.WriteLine(custOrder);
-                    //}
-
-                    //foreach (var cust in storeDb.CustomerOrders.
-                    //{
-                    //    Console.WriteLine(cust);
-
-                    //    foreach (var custorder in cust.CustomerOrders)
-                    //    {
-                    //        Console.WriteLine(custorder);
-
-                    //        foreach (var order in custorder.OrderItems)
-                    //        {
-                    //            Console.WriteLine(order);
-                    //        }
-                    //    }
-                    //}
-
+                    ListOrders(customer);
                     break;
                 case 4:
-                    //Edit order ?
+
+                    //DeleteOrder(customer);    //TODO - fixa!
                     break;
                 case 5:
-                    //Delete order
-
-                    //Identify CustOrder to delete.
-
-
-                    //storeDb.Customer
+                    //Edit customer details
+                    EditCustomer(customer);
                     break;
                 case 6:
-                    //Edit customer details
-                    break;
-                case 7:
                     //Return to loginMenu.
                     run = false;
                     break;
@@ -117,6 +84,28 @@ namespace Paruppgift_e_handel
             return run;
         }
 
+        //private void DeleteOrder(Customer customer)
+        //{
+        //    ListOrders(customer);
+
+        //    int ordersPlaced = storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Count();
+        //    Console.WriteLine(ordersPlaced);
+        //    int id = menu.UserIntQuery("Enter order ID to delete:", 0, ordersPlaced);
+
+        //}
+
+        private void EditCustomer(Customer customer)
+        {
+            var customerDetails = menu.GetCustomerDetails();
+            customer.FirstName = customerDetails[0];
+            customer.LastName = customerDetails[1];
+            customer.Address = customerDetails[2];
+            customer.Phone = customerDetails[3];
+            customer.Email = customerDetails[4];
+            customer.Password = customerDetails[5];
+            storeDb.SaveChanges();
+        }
+
         private List<OrderItems> AddProductToBasket(List<Product> inventory)
         {
             var customerOrderItems = new List<OrderItems>();
@@ -124,24 +113,27 @@ namespace Paruppgift_e_handel
 
             while (run)
             {
-
-                OrderItems orderItems = new()
+                int input = menu.UserIntQuery("Choose product:", 0, inventory.Count());
+                if (input == 0)
                 {
-                    Product = inventory[menu.UserIntQuery("Choose product:", 0, inventory.Count()) - 1],
-                    //Product = inventory.First(p => p.ProductId == menu.UserIntQuery("Choose product: ", 0, inventory.Count())),
-                    Amount = menu.UserIntQuery("Choose amount: ", 0, int.MaxValue)
-                };
+                    run = false;
+                    break;
+                }
+                var product = inventory[input - 1];
+                var amount = menu.UserIntQuery("Choose amount: ", 0, int.MaxValue);
+                OrderItems orderItems = new(product, amount);
 
                 customerOrderItems.Insert(0, orderItems);
-                menu.PrintList(customerOrderItems);
-                run = Convert.ToBoolean(menu.UserIntQuery("Continue shopping (1 = yes, 0 = no)", 0, 1)); // TODO - Fixa så att vi slipper frågan (0 = exit)
-                                                                                                         //Place order / Cancel order
+                double price = customerOrderItems.Sum(x => x.TotalSum);
+                menu.PrintList(customerOrderItems, price);
+                //run = Convert.ToBoolean(menu.UserIntQuery("Continue shopping (1 = yes, 0 = no)", 0, 1));
+
 
             }
             return customerOrderItems;
         }
         private Customer CreateCustomer(string[] customerDetails)
-        {            
+        {
             var customer = new Customer()
             {
                 FirstName = customerDetails[0],
@@ -159,13 +151,28 @@ namespace Paruppgift_e_handel
         {
             var customerOrder = new CustomerOrder(customer.CustomerId, shoppingBasket);
             storeDb.CustomerOrders.Add(customerOrder);
-            storeDb.SaveChanges();            
+            storeDb.SaveChanges();
+            Console.WriteLine($"{customerOrder} was placed successfully!");
         }
 
 
         private List<Product> ListAllProducts()
         {
             return storeDb.Products.ToList();
+        }
+
+        internal void ListOrders(Customer customer)
+        {
+            Console.WriteLine($"All orders placed by {customer.FirstName} {customer.LastName}");
+            foreach (var customerOrder in storeDb.CustomerOrders.Where(x => x.CustomerId == customer.CustomerId).Include(x => x.OrderItems).ThenInclude(x => x.Product))
+            {
+                Console.WriteLine($"Order ID: {customerOrder.CustomerOrderId} Total cost: {customerOrder.OrderItems.Sum(x => x.TotalSum)}SEK");
+
+                foreach (var item in customerOrder.OrderItems)
+                {
+                    Console.WriteLine(item);
+                }
+            }
         }
 
         public Customer Login(string[] customerCredentials)
