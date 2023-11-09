@@ -14,12 +14,14 @@ namespace Paruppgift_e_handel
         private Store store;
         private string[] loginOptions;
         private string[] menuOptions;
+        private string[] adminOptions;
 
-        public Menu(Store store, string[] loginOptions, string[] menuOptions)
+        public Menu(Store store, string[] loginOptions, string[] menuOptions, string[] adminOptions)
         {
             this.store = store;
             this.loginOptions = loginOptions;
             this.menuOptions = menuOptions;
+            this.adminOptions = adminOptions;
         }
         public void DisplayLoginMenu()
         {
@@ -46,6 +48,20 @@ namespace Paruppgift_e_handel
                 run = store.MenuHandler(customer, UserIntQuery("Choose menu option:", 0, menuOptions.Length));
             }
         }
+        public void DisplayAdminMenu(Admin admin)
+        {
+            bool run = true;
+            while (run)
+            {
+                Console.Clear();
+                PrintHeader();
+                Console.WriteLine($"Logged in as admin: {admin.FirstName} {admin.LastName}\n");
+
+                Array.ForEach(adminOptions, Console.WriteLine);
+
+                run = store.AdminMenuHandler(admin, UserIntQuery("Choose menu option:", 0, adminOptions.Length));
+            }
+        }
 
         internal string[] UserLoginQuery()
         {
@@ -60,16 +76,6 @@ namespace Paruppgift_e_handel
             loginCredentials[1] = Console.ReadLine();
 
             return loginCredentials;
-        }
-
-        public void DisplayOrderMenu()
-        {
-
-        }
-
-        public void ListCustomers()
-        {
-
         }
 
         public void PrintList<T>(List<T> list, double price )
@@ -117,6 +123,28 @@ namespace Paruppgift_e_handel
 
             return newCustomerDetails;
         }
+        public void GetProductDetails()
+        {                       
+            
+            Console.Write("Enter description: ");
+            string description = Console.ReadLine();
+            Console.Write("Enter Brand: ");
+            string brand = Console.ReadLine();
+            
+            for (int i = 1; i <= Enum.GetValues(typeof(Category)).Length; i++)
+            {
+                Console.WriteLine($"[{i}] {(Category)i}");
+            }
+            //foreach (string name in Enum.GetNames(typeof(Category)))
+            //{
+            //    Console.WriteLine($"[{i}] {name}");
+            //    i++;
+            //}
+            Category category = (Category)UserIntQuery("Enter categorynumber: ", 1, Enum.GetValues(typeof(Category)).Length);
+            double price = UserDoubleQuery("Enter price: ", 0, double.MaxValue);
+            
+            store.AddProduct(description, brand, category, price);
+        }
 
         public int UserIntQuery(string question, int minValue, int maxValue)
         {
@@ -137,6 +165,26 @@ namespace Paruppgift_e_handel
 
             return value;
         }
+        public double UserDoubleQuery(string question, double minValue, double maxValue)
+        {
+            double value = 0;
+            bool validInput = false;
+
+            while (!validInput)
+            {
+                Console.Write(question);
+                validInput = double.TryParse(Console.ReadLine(), out value);
+
+                if (value < minValue || value > maxValue || !validInput)
+                {
+                    validInput = false;
+                    Console.WriteLine("\n Invalid entry. Please try again.\n");
+                }
+            }
+
+            return value;
+        }
+
 
         public void PrintHeader()
         {
@@ -154,6 +202,5 @@ namespace Paruppgift_e_handel
             Console.WriteLine("Invalid entry.");
             Console.ReadKey();
         }
-
     }
 }

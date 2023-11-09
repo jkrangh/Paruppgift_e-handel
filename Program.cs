@@ -9,7 +9,8 @@ namespace Paruppgift_e_handel
         static void Main(string[] args)
         {
             new Store().Run();
-
+            
+            
             //StoreDbContext storeDb = new StoreDbContext();
 
             //storeDb.Products.Add(new Product() { Description = "Banana", Brand = "Chiquita", Category = Category.Fruit, Price = 3 });

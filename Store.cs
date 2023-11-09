@@ -13,12 +13,15 @@ namespace Paruppgift_e_handel
         private Menu menu;
 
         //Menu options:
-        private readonly string[] loginOptions = { "1. Customer login", "2. Create new customer", "3. Exit" };
+        private readonly string[] loginOptions = { "1. Customer login", "2. Create new customer", "3. Admin login", "4. Exit" };
         private readonly string[] menuOptions = { "1. List available products", "2. Create order", "3. List all orders",
                                                   "4. Delete order", "5. Edit customer details", "6. Customer logout" };
+        private readonly string[] adminOptions = { "1. Manage open customer orders", "2. List all customer orders",
+                                                    "3. Add new product", "4. Edit/Delete available products", "5. Admin logout" };
+
         public Store()
         {
-            menu = new Menu(this, loginOptions, menuOptions);
+            menu = new Menu(this, loginOptions, menuOptions, adminOptions);
         }
 
         internal void Run()
@@ -30,16 +33,23 @@ namespace Paruppgift_e_handel
             switch (input)
             {
                 case 1:
-                    var customer = Login(menu.UserLoginQuery());
-                    if (customer != null)
+                    var user = Login(menu.UserLoginQuery());
+                    if (user != null)
                     {
-                        menu.DisplayMainMenu(customer);
+                        menu.DisplayMainMenu((Customer)user);
                     }
                     break;
                 case 2:
                     menu.DisplayMainMenu(CreateCustomer(menu.GetCustomerDetails()));
                     break;
                 case 3:
+                    var admin = Login(menu.UserLoginQuery());
+                    if (admin != null)
+                    {
+                        menu.DisplayAdminMenu((Admin)admin);
+                    }
+                    break;
+                case 4:
                     Environment.Exit(0);
                     return;
                 default:
@@ -48,7 +58,7 @@ namespace Paruppgift_e_handel
         }
 
         internal bool MenuHandler(Customer customer, int input)
-        {
+        {            
             bool run = true;
             switch (input)
             {
@@ -78,13 +88,44 @@ namespace Paruppgift_e_handel
                 case 6:
                     //Return to loginMenu.
                     run = false;
-                    break;
+                    break;                
                 default:
                     break;
             }
             return run;
         }
-        
+        internal bool AdminMenuHandler(Admin admin, int input) // TODO
+        {
+            //"1. Manage open customer orders", "2. List all customer orders",
+            //"3. Add new product", "4. Edit/Delete available products"
+
+            bool run = true;
+            switch (input)
+            {
+                case 1:
+                    //List available products
+                    menu.PrintList(ListAllProducts(), 0);
+                    break;
+                case 2:
+                    ListOrders(admin);
+                    Console.ReadKey();
+                    break;
+                case 3:
+                    menu.GetProductDetails();
+                    break;
+                case 4:
+                    //DeleteOrder(admin);    
+                    break;
+                case 5:
+                    //Return to loginMenu.
+                    run = false;
+                    break;                                  
+                default:
+                    break;
+            }
+            return run;
+        }
+
         private void EditCustomer(Customer customer)
         {
             var customerDetails = menu.GetCustomerDetails();
@@ -154,16 +195,33 @@ namespace Paruppgift_e_handel
 
         internal void ListOrders(Customer customer)
         {
-            Console.WriteLine($"All orders placed by {customer.FirstName} {customer.LastName}");
-            foreach (var customerOrder in storeDb.CustomerOrders.Where(x => x.Customer.CustomerId == customer.CustomerId).Include(x => x.OrderItems).ThenInclude(x => x.Product))
+                Console.WriteLine($"All orders placed by {customer.FirstName} {customer.LastName}");
+                foreach (var customerOrder in storeDb.CustomerOrders.Where(x => x.Customer.CustomerId == customer.CustomerId).Include(x => x.OrderItems).ThenInclude(x => x.Product))
+                {
+                    Console.WriteLine($"Order ID: {customerOrder.CustomerOrderId} Total: {customerOrder.OrderItems.Sum(x => x.TotalSum)}SEK");
+
+                    foreach (var item in customerOrder.OrderItems)
+                    {
+                        Console.WriteLine(item);
+                    }
+                }
+        }
+        internal void ListOrders(Admin admin)
+        {
+
+            Console.WriteLine($"All open orders");
+            foreach (var customerOrder in storeDb.CustomerOrders.OrderBy(x => x.HasBeenShipped).Include(x => x.OrderItems).ThenInclude(x => x.Product))
             {
-                Console.WriteLine($"Order ID: {customerOrder.CustomerOrderId} Total cost: {customerOrder.OrderItems.Sum(x => x.TotalSum)}SEK");
+                string status = customerOrder.HasBeenShipped ? "Shipped" : "Open";
+
+                Console.WriteLine($"Order ID: {customerOrder.CustomerOrderId} Status: {status} Received: {customerOrder.OrderCreated} Total: {customerOrder.OrderItems.Sum(x => x.TotalSum)}SEK");
 
                 foreach (var item in customerOrder.OrderItems)
                 {
                     Console.WriteLine(item);
                 }
             }
+
         }
         internal void DeleteOrder(Customer customer)
         {
@@ -181,25 +239,56 @@ namespace Paruppgift_e_handel
             }
         }
 
-        public Customer Login(string[] customerCredentials)
+        public object Login(string[] userCredentials)
         {
+            object user = storeDb.Customers.FirstOrDefault(c => c.Email == userCredentials[0] && c.Password == userCredentials[1]);
 
-
-            var customer = storeDb.Customers.FirstOrDefault(c => c.Email == customerCredentials[0] && c.Password == customerCredentials[1]);
-
-            if (customer == default)
+            if (user == default)
             {
-                menu.PrintLoginFail();
+                user = storeDb.Admins.FirstOrDefault(c => c.Email == userCredentials[0] && c.Password == userCredentials[1]);                
                 //customerCredentials = menu.CustomerLoginQuery();
             }
-            else if (customer != default)
+            if (user != default)
             {
-                return customer;
+                return user;
 
             }
 
             return null;
         }
-                
+
+        //public Admin Login(string[] adminCredentials)
+        //{
+
+
+        //    var customer = storeDb.Customers.FirstOrDefault(c => c.Email == customerCredentials[0] && c.Password == customerCredentials[1]);
+
+        //    if (customer == default)
+        //    {
+        //        menu.PrintLoginFail();
+        //        //customerCredentials = menu.CustomerLoginQuery();
+        //    }
+        //    else if (customer != default)
+        //    {
+        //        return customer;
+
+        //    }
+
+        //    return null;
+        //}
+
+        internal void AddProduct(string description, string brand, Category category, double price)
+        {
+            var newProduct = new Product()
+            {
+                Description = description,
+                Brand = brand,
+                Category = category,
+                Price = price                
+            };
+            storeDb.Products.Add(newProduct);
+            storeDb.SaveChanges();            
+        }
+
     }
 }

@@ -11,8 +11,11 @@ namespace Paruppgift_e_handel
     {
         
         public int CustomerOrderId { get; set; }
-        public Customer Customer { get; set; }       //TODO - Ändra till Customer-object.
+        public Customer Customer { get; set; }       
         public double TotalSum { get; set; }
+        public DateTime OrderCreated { get; set; }
+        public bool HasBeenShipped { get; set; } = false;
+        public DateTime OrderShipped { get; set; }
         public List<OrderItems> OrderItems { get; set; }
 
         public CustomerOrder()
@@ -23,10 +26,9 @@ namespace Paruppgift_e_handel
         {
             this.Customer = customer;
             OrderItems = orderItems;
+            OrderCreated = DateTime.Now;
             TotalSum = OrderItems.Sum(x => x.TotalSum);
         }
-
-        //TODO: bool IsDelivered: if true, user can't edit or delete order 
 
         public override string? ToString()
         {
