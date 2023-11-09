@@ -25,9 +25,11 @@ namespace Paruppgift_e_handel
         {
             while (true)
             {
+                PrintHeader();
                 Array.ForEach(loginOptions, Console.WriteLine);
 
                 store.LoginHandler(UserIntQuery("Choose menu option:", 0, loginOptions.Length));
+                Console.Clear();
             }
         }
         public void DisplayMainMenu(Customer customer)
@@ -35,6 +37,8 @@ namespace Paruppgift_e_handel
             bool run = true;
             while (run)
             {
+                Console.Clear();
+                PrintHeader();
                 Console.WriteLine($"Logged in as customer: {customer.FirstName} {customer.LastName}\n");
 
                 Array.ForEach(menuOptions, Console.WriteLine);
@@ -137,6 +141,7 @@ namespace Paruppgift_e_handel
         public void PrintHeader()
         {
             Console.WriteLine("==== E-Handel ====");
+            Console.WriteLine();
         }
 
         public void PrintLoginFail()
@@ -144,6 +149,10 @@ namespace Paruppgift_e_handel
             Console.WriteLine("Wrong user credentials entered.");
         }
 
+        public void EntryFail()
+        {
+            Console.WriteLine("Invalid entry.");
+        }
 
     }
 }

@@ -65,6 +65,7 @@ namespace Paruppgift_e_handel
                 case 3:
                     //List all orders
                     ListOrders(customer);
+                    Console.ReadKey();
                     break;
                 case 4:
 
@@ -174,6 +175,21 @@ namespace Paruppgift_e_handel
                 }
             }
         }
+        internal void DeleteOrder(Customer customer)
+        {
+            ListOrders(customer);
+            int orderIdToDelete = menu.UserIntQuery("Choose order to delete: ", 0, int.MaxValue);
+            var order = storeDb.CustomerOrders.FirstOrDefault(x => x.CustomerOrderId == orderIdToDelete);
+            if(order != default)
+            {
+                storeDb.CustomerOrders.Remove(order);
+                storeDb.SaveChanges();
+            }
+            else
+            {
+                menu.EntryFail();
+            }
+        }
 
         public Customer Login(string[] customerCredentials)
         {
@@ -194,5 +210,6 @@ namespace Paruppgift_e_handel
 
             return null;
         }
+                
     }
 }

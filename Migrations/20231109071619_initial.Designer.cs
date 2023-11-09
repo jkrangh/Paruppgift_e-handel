@@ -12,8 +12,8 @@ using Paruppgift_e_handel;
 namespace Paruppgift_e_handel.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20231108142506_init")]
-    partial class init
+    [Migration("20231109071619_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,6 +73,9 @@ namespace Paruppgift_e_handel.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<double>("TotalSum")
+                        .HasColumnType("float");
+
                     b.HasKey("CustomerOrderId");
 
                     b.HasIndex("CustomerId");
@@ -97,6 +100,9 @@ namespace Paruppgift_e_handel.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<double>("TotalSum")
+                        .HasColumnType("float");
+
                     b.HasKey("OrderItemsId");
 
                     b.HasIndex("CustomerOrderId");
@@ -114,19 +120,19 @@ namespace Paruppgift_e_handel.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
-                    b.Property<string>("ProductBrand")
+                    b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductCategory")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProductDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ProductPrice")
+                    b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("ProductId");
