@@ -69,7 +69,7 @@ namespace Paruppgift_e_handel
                     break;
                 case 4:
 
-                    //DeleteOrder(customer);    //TODO - fixa!
+                    DeleteOrder(customer);    //TODO - fixa! Testkört, verkar funka
                     break;
                 case 5:
                     //Edit customer details

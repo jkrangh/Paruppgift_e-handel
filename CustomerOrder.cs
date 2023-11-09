@@ -11,7 +11,7 @@ namespace Paruppgift_e_handel
     {
         
         public int CustomerOrderId { get; set; }
-        public int CustomerId { get; set; }
+        public int CustomerId { get; set; }       //TODO - Ändra till Customer-object.
         public double TotalSum { get; set; }
         public List<OrderItems> OrderItems { get; set; }
 
