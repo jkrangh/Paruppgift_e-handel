@@ -12,6 +12,7 @@ namespace Paruppgift_e_handel
         
         public int CustomerOrderId { get; set; }
         public int CustomerId { get; set; }
+        public double TotalSum { get; set; }
         public List<OrderItems> OrderItems { get; set; }
 
         public CustomerOrder()
@@ -22,14 +23,14 @@ namespace Paruppgift_e_handel
         {
             CustomerId = customerId;
             OrderItems = orderItems;
+            TotalSum = OrderItems.Sum(x => x.TotalSum);
         }
 
         //TODO: bool IsDelivered: if true, user can't edit or delete order 
 
-
         public override string? ToString()
         {
-            return $"Customer Order ID: {CustomerOrderId}";
+            return $"Order ID: {CustomerOrderId}";
         }
     }
 }
