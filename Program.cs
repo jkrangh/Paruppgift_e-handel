@@ -9,38 +9,24 @@ namespace Paruppgift_e_handel
         static void Main(string[] args)
         {
             new Store().Run();
-            
-            //var customer = store.Customers.FirstOrDefault(c => c.CustomerName == "Janne");
 
+            //StoreDbContext storeDb = new StoreDbContext();
 
-            //var items = new OrderItems() { Product = store.Products.First(x => x.ProductDescription == "Milk, 1L"), Amount = 1 };
-
-            //var shoppingBasket = new List<OrderItems> () { items };
-
-            //var customerOrder = new CustomerOrder() { OrderItems = shoppingBasket };
-
-
-
-
-
-            //foreach (var cust in db.Customers.Include(x => x.CustomerOrders).ThenInclude(x => x.OrderItems))
-            //{
-            //    Console.WriteLine(cust);
-
-            //    foreach (var custorder in cust.CustomerOrders)
-            //    {
-            //        Console.WriteLine(custorder);
-
-            //        foreach (var order in custorder.OrderItems)
-            //        {
-            //            Console.WriteLine(order);
-            //        }
-            //    }
-            //}
-
-
-
-
+            //storeDb.Products.Add(new Product() { Description = "Banana", Brand = "Chiquita", Category = Category.Fruit, Price = 3 });
+            //storeDb.Products.Add(new Product() { Description = "Apple", Brand = "Montesanto", Category = Category.Fruit, Price = 3.5 });
+            //storeDb.Products.Add(new Product() { Description = "Pear", Brand = "Montesanto", Category = Category.Fruit, Price = 4 });
+            //storeDb.Products.Add(new Product() { Description = "Lettuce", Brand = "Green farmer", Category = Category.Vegetable, Price = 20 });
+            //storeDb.Products.Add(new Product() { Description = "Tomato", Brand = "Grandma Umas", Category = Category.Vegetable, Price = 8 });
+            //storeDb.Products.Add(new Product() { Description = "Cucumber", Brand = "Green farmer", Category = Category.Vegetable, Price = 12 });
+            //storeDb.Products.Add(new Product() { Description = "Milk", Brand = "Happy cows finest", Category = Category.Dairy, Price = 22 });
+            //storeDb.Products.Add(new Product() { Description = "Boellnaesfiel", Brand = "Kavli", Category = Category.Dairy, Price = 28 });
+            //storeDb.Products.Add(new Product() { Description = "T-bone steak", Brand = "Furious bull", Category = Category.Meat, Price = 299 });
+            //storeDb.Products.Add(new Product() { Description = "Minced beef", Brand = "Belgian blues", Category = Category.Meat, Price = 129 });
+            //storeDb.Products.Add(new Product() { Description = "Salmon", Brand = "Norwegian star", Category = Category.Fish, Price = 229 });
+            //storeDb.Products.Add(new Product() { Description = "Tuna, canned", Brand = "Skippers canned goods", Category = Category.Fish, Price = 24 });
+            //storeDb.Products.Add(new Product() { Description = "Ostridge steak", Brand = "Running birds", Category = Category.Poultry, Price = 239 });
+            //storeDb.Products.Add(new Product() { Description = "Chicken, whole", Brand = "Golden rooster", Category = Category.Poultry, Price = 69 });
+            //storeDb.SaveChanges();
         }
     }
 }
